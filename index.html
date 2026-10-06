@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+
+<html lang="uk">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>MVRK STORE</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+<style>
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+
+
+  :root {
+
+    --yellow: #FFE500;
+
+    --black: #0A0A0A;
+
+    --white: #FFFFFF;
+
+    --gray: #F2F2F2;
+
+    --mid: #888;
+
+    --shadow: 4px 4px 0px var(--black);
+
+    --shadow-lg: 6px 6px 0px var(--black);
+
+  }
+
+
+
+  body {
+
+    font-family: 'Inter', sans-serif;
+
+    background: var(--white);
+
+    color: var(--black);
+
+    overflow-x: hidden;
+
+  }
+
+
+
+  /* NAV */
+
+  nav {
+
+    position: sticky; top: 0; z-index: 100;
+
+    background: var(--black);
+
+    display: flex; align-items: center; justify-content: space-between;
+
+    padding: 0 32px; height: 60px;
+
+  }
+
+  .nav-logo {
+
+    font-family: 'Bebas Neue', sans-serif;
+
+    font-size: 28px; color: var(--yellow); letter-spacing: 2px;
+
+  }
+
+  .cart-btn {
+
+    background: var(--yellow); border: 2px solid var(--yellow);
+
+    font-family: 'Inter', sans-serif; font-weight: 700;
+
+    font-size: 14px; padding: 8px 20px; cursor: pointer;
+
+    display: flex; align-items: center; gap: 8px;
+
+    transition: transform .1s;
+
+  }
+
+  .cart-btn:hover { transform: translate(-2px, -2px); box-shadow: var(--shadow); }
+
+  .cart-count {
+
+    background: var(--black); color: var(--yellow);
+
+    border-radius: 50%; width: 20px; height: 20px;
+
+    display: flex; align-items: center; justify-content: center;
+
+    font-size: 11px; font-weight: 900;
+
+  }
+
+
+
+  /* HERO */
+
+  .hero {
+
+    background: var(--yellow);
+
+    padding: 64px 32px 48px;
+
+    border-bottom: 3px solid var(--black);
+
+    display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;
+
+  }
+
+  .hero h1 {
+
+    font-family: 'Bebas Neue', sans-serif;
+
+    font-size: clamp(72px, 12vw, 140px);
+
+    line-height: .9; letter-spacing: -2px;
+
+  }
+
+  .hero-sub {
+
+    font-size: 16px; font-weight: 500; max-width: 260px;
+
+    text-align: right; padding-bottom: 8px;
+
+  }
+
+  .hero-sub span { font-weight: 900; }
+
+
+
+  /* CATALOG */
+
+  .catalog-header {
+
+    padding: 40px 32px 24px;
+
+    display: flex; align-items: baseline; gap: 16px;
+
+  }
+
+  .catalog-header h2 {
+
+    font-family: 'Bebas Neue', sans-serif;
+
+    font-size: 40px; letter-spacing: 1px;
+
+  }
+
+  .catalog-header span { color: var(--mid); font-size: 14px; }
+
+
+
+  .grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+
+    gap: 24px; padding: 0 32px 64px;
+
+  }
+
+
+
+  .card {
+
+    border: 2px solid var(--black);
+
+    transition: transform .15s, box-shadow .15s;
+
+  }
+
+  .card:hover { transform: translate(-3px, -3px); box-shadow: var(--shadow-lg); }
+
+
+
+  .card-img {
+
+    width: 100%; aspect-ratio: 1;
+
+    display: flex; align-items: center; justify-content: center;
+
+    font-size: 72px; border-bottom: 2px solid var(--black);
+
+  }
+
+
+
+  .card-body { padding: 16px; }
+
+  .card-name { font-weight: 900; font-size: 16px; margin-bottom: 4px; }
+
+  .card-desc { font-size: 13px; color: var(--mid); margin-bottom: 16px; }
+
+
+
+  .card-footer {
+
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+
+    flex-wrap: wrap; gap: 10px;
+
+  }
+
+  .price { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 1px; }
+
+
+
+  .size-select {
+
+    border: 2px solid var(--black); padding: 6px 8px;
+
+    font-family: 'Inter', sans-serif; font-weight: 700; font-size: 13px;
+
+    background: var(--white); cursor: pointer; outline: none;
+
+  }
+
+
+
+  .add-btn {
+
+    background: var(--black); color: var(--yellow);
+
+    border: 2px solid var(--black); padding: 8px 16px;
+
+    font-family: 'Inter', sans-serif; font-weight: 700; font-size: 13px;
+
+    cursor: pointer; transition: background .15s, color .15s;
+
+  }
+
+  .add-btn:hover { background: var(--yellow); color: var(--black); }
+
+
+
+  /* CART DRAWER */
+
+  .overlay {
+
+    position: fixed; inset: 0; background: rgba(0,0,0,.5);
+
+    z-index: 200; opacity: 0; pointer-events: none; transition: opacity .25s;
+
+  }
+
+  .overlay.open { opacity: 1; pointer-events: all; }
+
+
+
+  .drawer {
+
+    position: fixed; top: 0; right: 0; bottom: 0; width: 420px; max-width: 100vw;
+
+    background: var(--white); border-left: 3px solid var(--black);
+
+    z-index: 201; transform: translateX(100%); transition: transform .3s cubic-bezier(.4,0,.2,1);
+
+    display: flex; flex-direction: column;
+
+  }
+
+  .drawer.open { transform: translateX(0); }
+
+
+
+  .drawer-head {
+
+    background: var(--black); color: var(--yellow);
+
+    padding: 20px 24px; display: flex; align-items: center; justify-content: space-between;
+
+  }
+
+  .drawer-head h3 { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 1px; }
+
+  .close-btn {
+
+    background: none; border: none; color: var(--yellow);
+
+    font-size: 24px; cursor: pointer; line-height: 1;
+
+  }
+
+
+
+  .drawer-items { flex: 1; overflow-y: auto; padding: 16px 24px; }
+
+  .empty-cart {
+
+    text-align: center; padding: 48px 0; color: var(--mid);
+
+    font-size: 14px;
+
+  }
+
+  .empty-cart div { font-size: 48px; margin-bottom: 12px; }
+
+
+
+  .cart-item {
+
+    display: flex; align-items: center; gap: 12px;
+
+    padding: 12px 0; border-bottom: 1px solid #eee;
+
+  }
+
+  .cart-item-emoji { font-size: 32px; width: 48px; text-align: center; }
+
+  .cart-item-info { flex: 1; }
+
+  .cart-item-name { font-weight: 700; font-size: 14px; }
+
+  .cart-item-size { font-size: 12px; color: var(--mid); }
+
+  .cart-item-price { font-family: 'Bebas Neue', sans-serif; font-size: 20px; }
+
+  .remove-btn {
+
+    background: none; border: none; color: var(--mid);
+
+    font-size: 18px; cursor: pointer; padding: 4px;
+
+  }
+
+  .remove-btn:hover { color: var(--black); }
+
+
+
+  .drawer-footer { padding: 20px 24px; border-top: 2px solid var(--black); }
+
+  .total-row {
+
+    display: flex; justify-content: space-between; align-items: baseline;
+
+    margin-bottom: 16px;
+
+  }
+
+  .total-label { font-weight: 700; }
+
+  .total-price { font-family: 'Bebas Neue', sans-serif; font-size: 32px; }
+
+
+
+  .checkout-btn {
+
+    width: 100%; background: var(--yellow); border: 2px solid var(--black);
+
+    padding: 14px; font-family: 'Inter', sans-serif; font-weight: 900;
+
+    font-size: 15px; cursor: pointer; transition: transform .1s, box-shadow .1s;
+
+  }
+
+  .checkout-btn:hover { transform: translate(-2px,-2px); box-shadow: var(--shadow); }
+
+
+
+  /* ORDER MODAL */
+
+  .modal-overlay {
+
+    position: fixed; inset: 0; background: rgba(0,0,0,.6);
+
+    z-index: 300; display: none; align-items: center; justify-content: center;
+
+    padding: 16px;
+
+  }
+
+  .modal-overlay.open { display: flex; }
+
+
+
+  .modal {
+
+    background: var(--white); border: 3px solid var(--black);
+
+    width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto;
+
+    box-shadow: 8px 8px 0 var(--black);
+
+  }
+
+  .modal-head {
+
+    background: var(--black); color: var(--yellow);
+
+    padding: 20px 24px; display: flex; justify-content: space-between; align-items: center;
+
+  }
+
+  .modal-head h3 { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 1px; }
+
+
+
+  .modal-body { padding: 24px; }
+
+  .order-summary {
+
+    background: var(--gray); border: 2px solid var(--black);
+
+    padding: 12px 16px; margin-bottom: 24px; font-size: 13px;
+
+  }
+
+  .order-summary strong { display: block; margin-bottom: 6px; font-weight: 900; }
+
+
+
+  .field { margin-bottom: 16px; }
+
+  .field label { display: block; font-weight: 700; font-size: 13px; margin-bottom: 6px; }
+
+  .field input {
+
+    width: 100%; border: 2px solid var(--black); padding: 10px 12px;
+
+    font-family: 'Inter', sans-serif; font-size: 14px; outline: none;
+
+    transition: box-shadow .15s;
+
+  }
+
+  .field input:focus { box-shadow: var(--shadow); }
+
+  .field input.error { border-color: #e00; }
+
+  .field .err-msg { color: #e00; font-size: 12px; margin-top: 4px; display: none; }
+
+  .field input.error + .err-msg { display: block; }
+
+
+
+  .submit-btn {
+
+    width: 100%; background: var(--yellow); border: 2px solid var(--black);
+
+    padding: 14px; font-family: 'Inter', sans-serif; font-weight: 900;
+
+    font-size: 15px; cursor: pointer; margin-top: 8px;
+
+    transition: transform .1s, box-shadow .1s;
+
+  }
+
+  .submit-btn:hover:not(:disabled) { transform: translate(-2px,-2px); box-shadow: var(--shadow); }
+
+  .submit-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+
+
+  /* SUCCESS */
+
+  .success-screen {
+
+    display: none; flex-direction: column; align-items: center;
+
+    padding: 48px 24px; text-align: center;
+
+  }
+
+  .success-screen.show { display: flex; }
+
+  .success-screen .icon { font-size: 64px; margin-bottom: 16px; }
+
+  .success-screen h3 { font-family: 'Bebas Neue', sans-serif; font-size: 32px; margin-bottom: 8px; }
+
+  .success-screen p { color: var(--mid); font-size: 14px; max-width: 300px; }
+
+
+
+  @media (max-width: 600px) {
+
+    .hero { flex-direction: column; align-items: flex-start; }
+
+    .hero-sub { text-align: left; }
+
+    nav { padding: 0 16px; }
+
+    .grid { padding: 0 16px 48px; }
+
+    .catalog-header { padding: 32px 16px 16px; }
+
+    .drawer { width: 100vw; }
+
+  }
+
+</style>
+
+</head>
+
+<body>
+
+
+
+<nav>
+
+  <div class="nav-logo">MVRK STORE</div>
+
+  <button class="cart-btn" onclick="toggleCart()">
+
+    🛒 Кошик <span class="cart-count" id="cartCount">0</span>
+
+  </button>
+
+</nav>
+
+
+
+<section class="hero">
+
+  <h1>DROP<br>001</h1>
+
+  <p class="hero-sub">Офіційний мерч.<br><span>Лімітована колекція.</span><br>Відправка по всій Україні.</p>
+
+</section>
+
+
+
+<div class="catalog-header">
+
+  <h2>КАТАЛОГ</h2>
+
+  <span id="itemCount">6 товарів</span>
+
+</div>
+
+
+
+<div class="grid" id="grid"></div>
+
+
+
+<!-- Cart drawer -->
+
+<div class="overlay" id="overlay" onclick="toggleCart()"></div>
+
+<div class="drawer" id="drawer">
+
+  <div class="drawer-head">
+
+    <h3>МІЙ КОШИК</h3>
+
+    <button class="close-btn" onclick="toggleCart()">✕</button>
+
+  </div>
+
+  <div class="drawer-items" id="drawerItems"></div>
+
+  <div class="drawer-footer">
+
+    <div class="total-row">
+
+      <span class="total-label">Разом:</span>
+
+      <span class="total-price" id="totalPrice">0 ₴</span>
+
+    </div>
+
+    <button class="checkout-btn" onclick="openOrder()">ОФОРМИТИ ЗАМОВЛЕННЯ →</button>
+
+  </div>
+
+</div>
+
+
+
+<!-- Order modal -->
+
+<div class="modal-overlay" id="modalOverlay">
+
+  <div class="modal">
+
+    <div class="modal-head">
+
+      <h3>ОФОРМЛЕННЯ</h3>
+
+      <button class="close-btn" onclick="closeOrder()">✕</button>
+
+    </div>
+
+    <div class="modal-body" id="modalBody">
+
+      <div class="order-summary" id="orderSummary"></div>
+
+      <div class="field">
+
+        <label>Ім'я та прізвище</label>
+
+        <input id="fName" placeholder="Іван Коваль" />
+
+        <div class="err-msg">Введіть ім'я</div>
+
+      </div>
+
+      <div class="field">
+
+        <label>Телефон</label>
+
+        <input id="fPhone" placeholder="+380671234567" />
+
+        <div class="err-msg">Введіть номер телефону</div>
+
+      </div>
+
+      <div class="field">
+
+        <label>Email</label>
+
+        <input id="fEmail" type="email" placeholder="ivan@gmail.com" />
+
+        <div class="err-msg">Введіть email</div>
+
+      </div>
+
+      <div class="field">
+
+        <label>Адреса доставки (Нова Пошта)</label>
+
+        <input id="fAddress" placeholder="Київ, відділення №5" />
+
+        <div class="err-msg">Введіть адресу</div>
+
+      </div>
+
+      <button class="submit-btn" id="submitBtn" onclick="submitOrder()">ЗАМОВИТИ →</button>
+
+    </div>
+
+    <div class="success-screen" id="successScreen">
+
+      <div class="icon">🎉</div>
+
+      <h3>ЗАПИТ НАДІСЛАНО!</h3>
+
+      <p>Перевірте отримання замовлення у n8n. Надсилання запиту не підтверджує його обробку.</p>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<script>
+
+const WEBHOOK_URL = 'https://danit-n8n.duckdns.org/webhook-test/8b6b4261-9601-456f-a1eb-388ba03100d2';
+
+
+
+const products = [
+
+  { id:1, name:'Худі MVRK', desc:'Оверсайз, 320г/м², унісекс', price:899, emoji:'👕', bg:'#FFE500' },
+
+  { id:2, name:'Футболка DROP', desc:'100% бавовна, щільна', price:449, emoji:'👔', bg:'#F2F2F2' },
+
+  { id:3, name:'Кепка MVRK', desc:'6-панельна, регульована', price:349, emoji:'🧢', bg:'#0A0A0A' },
+
+  { id:4, name:'Лонгслів BASE', desc:'Оверсайз, рибана манжета', price:549, emoji:'🩱', bg:'#E8E8E8' },
+
+  { id:5, name:'Шопер CARRY', desc:'Щільний холст, чорний принт', price:249, emoji:'🛍️', bg:'#FFE500' },
+
+  { id:6, name:'Шкарпетки SET', desc:'3 пари, бавовна', price:199, emoji:'🧦', bg:'#F2F2F2' },
+
+];
+
+
+
+const sizes = ['XS','S','M','L','XL'];
+
+let cart = [];
+
+
+
+function renderGrid() {
+
+  const grid = document.getElementById('grid');
+
+  grid.innerHTML = products.map(p => `
+
+    <div class="card">
+
+      <div class="card-img" style="background:${p.bg};color:${p.bg==='#0A0A0A'?'#fff':'#000'}">
+
+        ${p.emoji}
+
+      </div>
+
+      <div class="card-body">
+
+        <div class="card-name">${p.name}</div>
+
+        <div class="card-desc">${p.desc}</div>
+
+        <div class="card-footer">
+
+          <span class="price">${p.price} ₴</span>
+
+          <select class="size-select" id="size-${p.id}">
+
+            ${sizes.map(s=>`<option>${s}</option>`).join('')}
+
+          </select>
+
+          <button class="add-btn" onclick="addToCart(${p.id})">+ В КОШИК</button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `).join('');
+
+}
+
+
+
+function addToCart(id) {
+
+  const p = products.find(x => x.id === id);
+
+  const size = document.getElementById(`size-${id}`).value;
+
+  const existing = cart.find(x => x.id === id && x.size === size);
+
+  if (existing) existing.qty++;
+
+  else cart.push({ ...p, size, qty: 1 });
+
+  updateCart();
+
+  if (!document.getElementById('drawer').classList.contains('open')) toggleCart();
+
+}
+
+
+
+function removeFromCart(id, size) {
+
+  cart = cart.filter(x => !(x.id === id && x.size === size));
+
+  updateCart();
+
+}
+
+
+
+function updateCart() {
+
+  const count = cart.reduce((s,x) => s + x.qty, 0);
+
+  const total = cart.reduce((s,x) => s + x.price * x.qty, 0);
+
+  document.getElementById('cartCount').textContent = count;
+
+  document.getElementById('totalPrice').textContent = total.toLocaleString('uk') + ' ₴';
+
+
+
+  const items = document.getElementById('drawerItems');
+
+  if (!cart.length) {
+
+    items.innerHTML = `<div class="empty-cart"><div>🛒</div>Кошик порожній</div>`;
+
+    return;
+
+  }
+
+  items.innerHTML = cart.map(x => `
+
+    <div class="cart-item">
+
+      <div class="cart-item-emoji">${x.emoji}</div>
+
+      <div class="cart-item-info">
+
+        <div class="cart-item-name">${x.name}</div>
+
+        <div class="cart-item-size">Розмір: ${x.size} · ${x.qty} шт.</div>
+
+      </div>
+
+      <div class="cart-item-price">${(x.price * x.qty).toLocaleString('uk')} ₴</div>
+
+      <button class="remove-btn" onclick="removeFromCart(${x.id}, '${x.size}')">✕</button>
+
+    </div>
+
+  `).join('');
+
+}
+
+
+
+function toggleCart() {
+
+  document.getElementById('drawer').classList.toggle('open');
+
+  document.getElementById('overlay').classList.toggle('open');
+
+}
+
+
+
+function openOrder() {
+
+  if (!cart.length) return;
+
+  const total = cart.reduce((s,x) => s + x.price * x.qty, 0);
+
+  const lines = cart.map(x => `${x.name} (${x.size}) × ${x.qty}`).join(', ');
+
+  document.getElementById('orderSummary').innerHTML =
+
+    `<strong>Ваше замовлення:</strong>${lines}<br><br>💰 До сплати: <strong>${total.toLocaleString('uk')} ₴</strong>`;
+
+  document.getElementById('modalOverlay').classList.add('open');
+
+  document.getElementById('successScreen').classList.remove('show');
+
+  document.getElementById('modalBody').style.display = '';
+
+  toggleCart();
+
+}
+
+
+
+function closeOrder() {
+
+  document.getElementById('modalOverlay').classList.remove('open');
+
+}
+
+
+
+function validate() {
+
+  let ok = true;
+
+  [['fName','name'],['fPhone','phone'],['fEmail','email'],['fAddress','address']].forEach(([id]) => {
+
+    const el = document.getElementById(id);
+
+    const empty = !el.value.trim();
+
+    el.classList.toggle('error', empty);
+
+    if (empty) ok = false;
+
+  });
+
+  return ok;
+
+}
+
+
+
+async function submitOrder() {
+
+  if (!validate()) return;
+
+  const btn = document.getElementById('submitBtn');
+
+  btn.disabled = true;
+
+  btn.textContent = 'Надсилаємо...';
+
+
+
+  const total = cart.reduce((s,x) => s + x.price * x.qty, 0);
+
+  const items = cart.map(x => `${x.name} (${x.size}) x${x.qty}`).join(', ');
+
+
+
+  const payload = {
+
+    name:    document.getElementById('fName').value.trim(),
+
+    phone:   document.getElementById('fPhone').value.trim(),
+
+    email:   document.getElementById('fEmail').value.trim(),
+
+    address: document.getElementById('fAddress').value.trim(),
+
+    items,
+
+    total:   String(total),
+
+    created_at: new Date().toISOString(),
+
+  };
+
+
+
+  try {
+
+    await fetch(WEBHOOK_URL, {
+
+      method: 'POST',
+
+      headers: { 'Content-Type': 'text/plain' },
+
+      body: JSON.stringify(payload),
+
+      mode: 'no-cors',
+
+    });
+
+  } catch(e) {
+    console.warn('webhook error', e);
+    alert('Не вдалося надіслати запит. Перевірте підключення та спробуйте ще раз.');
+    btn.disabled = false;
+    btn.textContent = 'ЗАМОВИТИ →';
+    return;
+  }
+
+
+
+  cart = [];
+
+  updateCart();
+
+  document.getElementById('modalBody').style.display = 'none';
+
+  document.getElementById('successScreen').classList.add('show');
+
+  btn.disabled = false;
+
+  btn.textContent = 'ЗАМОВИТИ →';
+
+}
+
+
+
+renderGrid();
+
+updateCart();
+
+</script>
+
+</body>
+
+</html>
